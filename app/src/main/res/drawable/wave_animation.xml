@@ -1,0 +1,10 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/ic_frame1" android:duration="150" />
+    <item android:drawable="@drawable/ic_frame2" android:duration="150" />
+    <item android:drawable="@drawable/ic_frame3" android:duration="150" />
+    <item android:drawable="@drawable/ic_frame4" android:duration="150" />
+    <item android:drawable="@drawable/ic_frame5" android:duration="150" />
+
+    <!-- Thêm các frame cần thiết để tạo chuyển động -->
+</animation-list>
