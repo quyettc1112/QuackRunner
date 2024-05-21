@@ -3,11 +3,15 @@ package com.example.quackrunner.Activity;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.app.Dialog;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -22,11 +26,17 @@ import com.airbnb.lottie.LottieDrawable;
 import com.example.quackrunner.R;
 import com.example.quackrunner.databinding.ActivityQuackRunnerBinding;
 
+import pl.droidsonroids.gif.GifImageView;
+
 public class QuackRunnerActivity extends AppCompatActivity {
 
     // Khai báo bindingđể thay thế findViewbyId(),
     private ActivityQuackRunnerBinding binding;
-    private LottieAnimationView animationView;
+
+    // Sử dụng nhạc
+    private MediaPlayer mediaPlayer;
+
+    private boolean isMusicPlaying = true; // Để theo dõi trạng thái nhạc
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,19 +51,33 @@ public class QuackRunnerActivity extends AppCompatActivity {
             return insets;
         });
 
-        SeekBar seekBarLine1 = binding.customSeekbarLine1;
-        SeekBar seekBarLine2 = binding.customSeekbarLine2;
-        SeekBar seekBarLine3 = binding.customSeekbarLine3;
-        SeekBar seekBarLine4 = binding.customSeekbarLine4;
+//        SeekBar seekBarLine1 = binding.customSeekbarLine1;
+//        SeekBar seekBarLine2 = binding.customSeekbarLine2;
+//        SeekBar seekBarLine3 = binding.customSeekbarLine3;
+//        SeekBar seekBarLine4 = binding.customSeekbarLine4;
 
-        setupSeekBarAnimation(seekBarLine1, 200);
-        setupSeekBarAnimation(seekBarLine2, 300);
-        setupSeekBarAnimation(seekBarLine3, 200);
-        setupSeekBarAnimation(seekBarLine4, 300);
+        setupSeekBarAnimation(binding.customSeekbarLine1, 200);
+        setupSeekBarAnimation(binding.customSeekbarLine2, 300);
+        setupSeekBarAnimation(binding.customSeekbarLine3, 200);
+        setupSeekBarAnimation(binding.customSeekbarLine4, 300);
 
 
+        setUpMusic();
+        setAnimated();
+        resetDuckProgress();
+
+
+        // show Custom Dialog Event
+        binding.btnBetDuck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCustomDialog();
+            }
+        });
     }
 
+
+    // Setup ảnh động seek bar
     private void setupSeekBarAnimation(SeekBar seekBar, long shakeDuration) {
         LayerDrawable layerDrawable = (LayerDrawable) seekBar.getProgressDrawable();
 
@@ -78,4 +102,82 @@ public class QuackRunnerActivity extends AppCompatActivity {
         // Bắt đầu animation
         shakeAnimator.start();
     }
+
+
+    private void setUpMusic() {
+        mediaPlayer = MediaPlayer.create(this, R.raw.ms_quack_music);
+        mediaPlayer.setLooping(true); // Set looping
+        mediaPlayer.start();
+        binding.imMusicOnOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isMusicPlaying) {
+                    mediaPlayer.pause();
+                    binding.imMusicOnOff.setImageResource(R.drawable.ic_speaker_off); // Đổi hình ảnh để phản ánh trạng thái nhạc đã tắt
+                } else {
+                    mediaPlayer.start();
+                    binding.imMusicOnOff.setImageResource(R.drawable.ic_speaker_on); // Đổi hình ảnh để phản ánh trạng thái nhạc đang phát
+                }
+                isMusicPlaying = !isMusicPlaying; // Cập nhật trạng thái nhạc
+            }
+        });
+    }
+
+
+    // set Ảnh động
+    private void setAnimated() {
+        binding.ltCoin.playAnimation();
+
+    }
+
+    private void showCustomDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_bet);
+
+        // Thiết lập kích thước cho Dialog
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT ,2000 );
+
+        // Cho phép hủy Dialog khi nhấn ra ngoài
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+
+        dialog.show();
+    }
+
+    private void resetDuckProgress() {
+
+        binding.btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.customSeekbarLine1.setProgress(0);
+                binding.customSeekbarLine2.setProgress(0);
+                binding.customSeekbarLine3.setProgress(0);
+                binding.customSeekbarLine4.setProgress(0);
+            }
+        });
+
+
+
+    }
+
+
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Dừng animation khi Activity bị dừng
+        if (binding.ltCoin != null && binding.ltCoin.isAnimating()) {
+            binding.ltCoin.pauseAnimation();
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
 }
