@@ -49,4 +49,7 @@ dependencies {
     annotationProcessor libs.compiler
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.28'
+
+    //viewpage2
+    implementation "androidx.viewpager2:viewpager2:1.1.0"
 }

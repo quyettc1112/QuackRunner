@@ -13,6 +13,9 @@
         android:theme="@style/Theme.QuackRunner"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.GuideActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.QuackRunnerActivity"
             android:exported="true" />
         <activity
@@ -20,15 +23,13 @@
             android:exported="true" />
         <activity
             android:name=".Activity.LoginActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
     </application>
 
 </manifest>
