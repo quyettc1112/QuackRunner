@@ -121,15 +121,16 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_play"
-        android:textStyle="bold"
-        android:textSize="30dp"
-        android:text="PLAY"
-        android:background="@drawable/background_button_bet"
-        android:layout_margin="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="250dp"
+        android:background="@drawable/background_button_bet"
+        android:text="PLAY"
+        android:textSize="30dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.202"
         app:layout_constraintStart_toStartOf="parent">
 
     </androidx.appcompat.widget.AppCompatButton>

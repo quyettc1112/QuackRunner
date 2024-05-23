@@ -10,8 +10,10 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -23,8 +25,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieDrawable;
+import com.example.quackrunner.Model.QuackDTO;
 import com.example.quackrunner.R;
 import com.example.quackrunner.databinding.ActivityQuackRunnerBinding;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -32,12 +40,15 @@ public class QuackRunnerActivity extends AppCompatActivity {
 
     // Khai báo bindingđể thay thế findViewbyId(),
     private ActivityQuackRunnerBinding binding;
-
+    public ArrayList<QuackDTO> listDuck = new ArrayList<>();
+    private Dialog dialog;
     // Sử dụng nhạc
     private MediaPlayer mediaPlayer;
 
-    private boolean isMusicPlaying = true; // Để theo dõi trạng thái nhạc
+    public int totalMoney = 100;
 
+    private boolean isMusicPlaying = true; // Để theo dõi trạng thái nhạc
+    Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +77,10 @@ public class QuackRunnerActivity extends AppCompatActivity {
         setAnimated();
         resetDuckProgress();
 
+        listDuck.add(new QuackDTO(binding.customSeekbarLine1, 0));
+        listDuck.add(new QuackDTO(binding.customSeekbarLine2, 0));
+        listDuck.add(new QuackDTO(binding.customSeekbarLine3, 0));
+        listDuck.add(new QuackDTO(binding.customSeekbarLine4, 0));
 
         // show Custom Dialog Event
         binding.btnBetDuck.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +90,6 @@ public class QuackRunnerActivity extends AppCompatActivity {
             }
         });
     }
-
 
     // Setup ảnh động seek bar
     private void setupSeekBarAnimation(SeekBar seekBar, long shakeDuration) {
@@ -130,8 +144,68 @@ public class QuackRunnerActivity extends AppCompatActivity {
 
     }
 
+    int currentProgress = 0;
+
+    public static int randomNextInt(int min, int max) {
+        Random random = new Random();
+
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        return random.nextInt(max - min + 1) + min;
+    }
+
+    //GAME PLAY
+    private void showWinnerDialog() {
+        // = 0 if lose
+        int winnerMoney = 0;
+        //get total money after play
+        for (QuackDTO quack : listDuck) {
+            winnerMoney = (quack.bet > 0 && quack.isWinner)
+                    ? quack.bet * 2 : winnerMoney;
+
+            totalMoney += (quack.bet > 0 && quack.isWinner) ? quack.bet * 2 : 0;
+        }
+
+        //EXAMPLE
+        Toast.makeText(QuackRunnerActivity.this,
+                (winnerMoney > 0) ? "YOU WIN " + winnerMoney : "YOU LOSE",
+                Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(QuackRunnerActivity.this,
+                (winnerMoney > 0) ? "YOU WIN " + totalMoney : "YOU LOSE",
+                Toast.LENGTH_SHORT).show();
+    }
+    private Runnable increaseRunnable = new Runnable() {
+        @Override
+        public void run() {
+            boolean isStop = false;
+
+            for (QuackDTO quack : listDuck) {
+
+                int speed = randomNextInt(1, 5);
+                quack.seekBar.setProgress(quack.seekBar.getProgress() + speed);
+
+                if (quack.seekBar.getProgress() >= quack.seekBar.getMax()) {
+                    isStop = true;
+                    quack.isWinner = true;
+                    break;
+                }
+            }
+
+            if (!isStop) {
+                handler.postDelayed(this, 500); // Lập lịch tăng sau một khoảng thời gian
+            }
+            else {
+                showWinnerDialog();
+            }
+        }
+    };
+
     private void showCustomDialog() {
-        final Dialog dialog = new Dialog(this);
+        dialog = new Dialog(this);
+
         dialog.setContentView(R.layout.dialog_bet);
 
         // Thiết lập kích thước cho Dialog
@@ -141,7 +215,81 @@ public class QuackRunnerActivity extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
 
+        dialog.findViewById(R.id.btn_play).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            listDuck.get(0).bet = Integer.parseInt(
+                                    ((EditText)dialog
+                                            .findViewById(R.id.edt_bet_duck1))
+                                            .getText()
+                                            .toString().trim());
+                        }
+                        catch (Exception e) {
+                            listDuck.get(0).bet = 0;
+                        }
+
+                        try {
+                            listDuck.get(1).bet = Integer.parseInt(
+                                    ((EditText)dialog
+                                            .findViewById(R.id.edt_bet_duck2))
+                                            .getText()
+                                            .toString().trim());
+                        }
+                        catch (Exception e) {
+                            listDuck.get(1).bet = 0;
+                        }
+
+                        try {
+                            listDuck.get(2).bet = Integer.parseInt(
+                                    ((EditText)dialog
+                                            .findViewById(R.id.edt_bet_duck3))
+                                            .getText()
+                                            .toString().trim());
+                        }
+                        catch (Exception e) {
+                            listDuck.get(2).bet = 0;
+                        }
+
+                        try {
+                            listDuck.get(3).bet = Integer.parseInt(
+                                    ((EditText)dialog
+                                            .findViewById(R.id.edt_bet_duck4))
+                                            .getText()
+                                            .toString().trim());
+                        }
+                        catch (Exception e) {
+                            listDuck.get(3).bet = 0;
+                        }
+                        int totalBet = 0;
+
+                        totalBet = listDuck.stream().mapToInt(o -> o.bet).sum();
+
+                        if (totalBet <= totalMoney) {
+                            totalMoney -= totalBet;
+                            dialog.dismiss();
+                            handler.post(increaseRunnable);
+                        }
+                        else {
+                            Toast.makeText(QuackRunnerActivity.this,
+                                    "TOTAL BET MONEY MUST BE LOWER THAN TOTAL MONEY",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        );
+
         dialog.show();
+    }
+
+    private void handleResetOnClick() {
+
+        for (QuackDTO quackDTO : listDuck) {
+            quackDTO.seekBar.setProgress(0);
+            quackDTO.bet = 0;
+        }
+
     }
 
     private void resetDuckProgress() {
@@ -149,18 +297,10 @@ public class QuackRunnerActivity extends AppCompatActivity {
         binding.btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.customSeekbarLine1.setProgress(0);
-                binding.customSeekbarLine2.setProgress(0);
-                binding.customSeekbarLine3.setProgress(0);
-                binding.customSeekbarLine4.setProgress(0);
+                handleResetOnClick();
             }
         });
-
-
-
     }
-
-
 
 
     @Override
