@@ -8,6 +8,8 @@
     android:layout_height="match_parent"
     tools:context=".Activity.QuackRunnerActivity">
 
+
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
@@ -129,6 +131,9 @@
         </ImageView>
 
     </LinearLayout>
+
+
+
 
     <LinearLayout
         android:gravity="center|left"
