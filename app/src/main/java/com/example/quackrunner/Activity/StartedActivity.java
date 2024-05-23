@@ -31,7 +31,7 @@ public class StartedActivity extends AppCompatActivity {
         binding = ActivityStartedBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
+//
 
 
         Intent play = new Intent(StartedActivity.this, QuackRunnerActivity.class);
