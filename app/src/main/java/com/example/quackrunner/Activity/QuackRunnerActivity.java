@@ -77,10 +77,10 @@ public class QuackRunnerActivity extends AppCompatActivity {
         setAnimated();
         resetDuckProgress();
 
-        listDuck.add(new QuackDTO(binding.customSeekbarLine1, 0));
-        listDuck.add(new QuackDTO(binding.customSeekbarLine2, 0));
-        listDuck.add(new QuackDTO(binding.customSeekbarLine3, 0));
-        listDuck.add(new QuackDTO(binding.customSeekbarLine4, 0));
+        listDuck.add(new QuackDTO(binding.customSeekbarLine1, 0, R.drawable.ic_duck_1));
+        listDuck.add(new QuackDTO(binding.customSeekbarLine2, 0, R.drawable.ic_duck_2));
+        listDuck.add(new QuackDTO(binding.customSeekbarLine3, 0, R.drawable.ic_duck_3));
+        listDuck.add(new QuackDTO(binding.customSeekbarLine4, 0, R.drawable.ic_duck_4));
 
         // show Custom Dialog Event
         binding.btnBetDuck.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +144,6 @@ public class QuackRunnerActivity extends AppCompatActivity {
 
     }
 
-    int currentProgress = 0;
 
     public static int randomNextInt(int min, int max) {
         Random random = new Random();
@@ -176,6 +175,10 @@ public class QuackRunnerActivity extends AppCompatActivity {
         Toast.makeText(QuackRunnerActivity.this,
                 (winnerMoney > 0) ? "YOU WIN " + totalMoney : "YOU LOSE",
                 Toast.LENGTH_SHORT).show();
+
+
+
+
     }
     private Runnable increaseRunnable = new Runnable() {
         @Override
@@ -284,7 +287,6 @@ public class QuackRunnerActivity extends AppCompatActivity {
     }
 
     private void handleResetOnClick() {
-
         for (QuackDTO quackDTO : listDuck) {
             quackDTO.seekBar.setProgress(0);
             quackDTO.bet = 0;
@@ -293,7 +295,6 @@ public class QuackRunnerActivity extends AppCompatActivity {
     }
 
     private void resetDuckProgress() {
-
         binding.btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
