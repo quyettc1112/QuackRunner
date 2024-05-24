@@ -55,6 +55,8 @@ public class TutorialActivity extends AppCompatActivity {
                     startActivity(i);
                     finish();
 
+
+
                 }
             }
         });
