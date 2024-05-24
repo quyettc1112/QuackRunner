@@ -1,5 +1,6 @@
 package com.example.quackrunner.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -49,6 +50,10 @@ public class TutorialActivity extends AppCompatActivity {
                 if (binding.introSliderViewpager.getCurrentItem() + 1  < adapter.getItemCount()) {
                     int temp = binding.introSliderViewpager.getCurrentItem();
                     binding.introSliderViewpager.setCurrentItem(temp + 1);
+                } else  {
+                    Intent i = new Intent(TutorialActivity.this, QuackRunnerActivity.class);
+                    startActivity(i);
+
                 }
             }
         });

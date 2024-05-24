@@ -170,12 +170,14 @@ public class QuackRunnerActivity extends AppCompatActivity {
         int winnerMoney = 0;
 
         //get total money after play
-        for (QuackDTO quack : listDuck) {
+        /*for (QuackDTO quack : listDuck) {
             winnerMoney = (quack.bet > 0 && quack.isWinner)
                     ? quack.bet * 2 : winnerMoney;
 
             totalMoney += (quack.bet > 0 && quack.isWinner) ? quack.bet * 2 : 0;
-        }
+        }*/
+        winnerMoney = winnerDuck.bet*2;
+        totalMoney += (winnerDuck.bet*2);
 
             dialog = new Dialog(this);
 
@@ -254,65 +256,69 @@ public class QuackRunnerActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        try {
-                            listDuck.get(0).bet = Integer.parseInt(
-                                    ((EditText)dialog
-                                            .findViewById(R.id.edt_bet_duck1))
-                                            .getText()
-                                            .toString().trim());
-                        }
-                        catch (Exception e) {
-                            listDuck.get(0).bet = 0;
-                        }
 
-                        try {
-                            listDuck.get(1).bet = Integer.parseInt(
-                                    ((EditText)dialog
-                                            .findViewById(R.id.edt_bet_duck2))
-                                            .getText()
-                                            .toString().trim());
-                        }
-                        catch (Exception e) {
-                            listDuck.get(1).bet = 0;
-                        }
+                            try {
+                                listDuck.get(0).bet = Integer.parseInt(
+                                        ((EditText)dialog
+                                                .findViewById(R.id.edt_bet_duck1))
+                                                .getText()
+                                                .toString().trim());
+                            }
+                            catch (Exception e) {
+                                listDuck.get(0).bet = 0;
+                            }
 
-                        try {
-                            listDuck.get(2).bet = Integer.parseInt(
-                                    ((EditText)dialog
-                                            .findViewById(R.id.edt_bet_duck3))
-                                            .getText()
-                                            .toString().trim());
-                        }
-                        catch (Exception e) {
-                            listDuck.get(2).bet = 0;
-                        }
+                            try {
+                                listDuck.get(1).bet = Integer.parseInt(
+                                        ((EditText)dialog
+                                                .findViewById(R.id.edt_bet_duck2))
+                                                .getText()
+                                                .toString().trim());
+                            }
+                            catch (Exception e) {
+                                listDuck.get(1).bet = 0;
+                            }
 
-                        try {
-                            listDuck.get(3).bet = Integer.parseInt(
-                                    ((EditText)dialog
-                                            .findViewById(R.id.edt_bet_duck4))
-                                            .getText()
-                                            .toString().trim());
-                        }
-                        catch (Exception e) {
-                            listDuck.get(3).bet = 0;
-                        }
-                        int totalBet = 0;
+                            try {
+                                listDuck.get(2).bet = Integer.parseInt(
+                                        ((EditText)dialog
+                                                .findViewById(R.id.edt_bet_duck3))
+                                                .getText()
+                                                .toString().trim());
+                            }
+                            catch (Exception e) {
+                                listDuck.get(2).bet = 0;
+                            }
 
-                        totalBet = listDuck.stream().mapToInt(o -> o.bet).sum();
+                            try {
+                                listDuck.get(3).bet = Integer.parseInt(
+                                        ((EditText)dialog
+                                                .findViewById(R.id.edt_bet_duck4))
+                                                .getText()
+                                                .toString().trim());
+                            }
+                            catch (Exception e) {
+                                listDuck.get(3).bet = 0;
+                            }
+                            int totalBet = 0;
 
-                        if (totalBet <= totalMoney) {
-                            totalMoney -= totalBet;
-                            TextView coin = binding.tvCoin;
-                            coin.setText(totalMoney + "");
-                            dialog.dismiss();
-                            handler.post(increaseRunnable);
-                        }
-                        else {
-                            Toast.makeText(QuackRunnerActivity.this,
-                                    "TOTAL BET MONEY MUST BE LOWER THAN TOTAL MONEY",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                            totalBet = listDuck.stream().mapToInt(o -> o.bet).sum();
+
+                            if (totalBet <= totalMoney) {
+                                totalMoney -= totalBet;
+                                TextView coin = binding.tvCoin;
+                                coin.setText(totalMoney + "");
+                                dialog.dismiss();
+                                handler.post(increaseRunnable);
+                            }
+                            else {
+                                Toast.makeText(QuackRunnerActivity.this,
+                                        "TOTAL BET MONEY MUST BE LOWER THAN TOTAL MONEY",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+
+
+
                     }
                 }
         );
