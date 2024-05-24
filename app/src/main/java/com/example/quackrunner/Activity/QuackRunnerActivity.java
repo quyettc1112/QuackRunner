@@ -11,10 +11,13 @@ import android.graphics.drawable.LayerDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.renderscript.ScriptGroup;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -45,6 +48,7 @@ public class QuackRunnerActivity extends AppCompatActivity {
     // Sử dụng nhạc
     private MediaPlayer mediaPlayer;
 
+
     public int totalMoney = 100;
 
     private boolean isMusicPlaying = true; // Để theo dõi trạng thái nhạc
@@ -53,7 +57,6 @@ public class QuackRunnerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
         binding = ActivityQuackRunnerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -156,9 +159,10 @@ public class QuackRunnerActivity extends AppCompatActivity {
     }
 
     //GAME PLAY
-    private void showWinnerDialog() {
+    private void showWinnerDialog(QuackDTO winnerDuck) {
         // = 0 if lose
         int winnerMoney = 0;
+
         //get total money after play
         for (QuackDTO quack : listDuck) {
             winnerMoney = (quack.bet > 0 && quack.isWinner)
@@ -167,24 +171,39 @@ public class QuackRunnerActivity extends AppCompatActivity {
             totalMoney += (quack.bet > 0 && quack.isWinner) ? quack.bet * 2 : 0;
         }
 
-        //EXAMPLE
-        Toast.makeText(QuackRunnerActivity.this,
-                (winnerMoney > 0) ? "YOU WIN " + winnerMoney : "YOU LOSE",
-                Toast.LENGTH_SHORT).show();
+            dialog = new Dialog(this);
 
-        Toast.makeText(QuackRunnerActivity.this,
-                (winnerMoney > 0) ? "YOU WIN " + totalMoney : "YOU LOSE",
-                Toast.LENGTH_SHORT).show();
+            dialog.setContentView(R.layout.dialog_result);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT ,2500 );
+
+            ImageView im_winner = dialog.findViewById(R.id.im_winner);
+            TextView textresult = dialog.findViewById(R.id.textresult);
+            im_winner.setImageResource(winnerDuck.image);
+
+            if (winnerMoney > 0) {
+            textresult.setText("Congratulations on your victory, keep going!");
+            }
+            else {textresult.setText("You lost, better luck next time.");}
+
+            TextView tv_coinn = binding.tvCoin;
+            TextView tv_coin = dialog.findViewById(R.id.tv_coin);
+            tv_coin.setText(winnerMoney + "");
+            tv_coinn.setText(totalMoney + "");
 
 
 
+            // Cho phép hủy Dialog khi nhấn ra ngoài
+            dialog.setCancelable(true);
+            dialog.setCanceledOnTouchOutside(true);
 
+
+        dialog.show();
     }
     private Runnable increaseRunnable = new Runnable() {
         @Override
         public void run() {
             boolean isStop = false;
-
+            QuackDTO winnerDuck = null;
             for (QuackDTO quack : listDuck) {
 
                 int speed = randomNextInt(1, 5);
@@ -193,6 +212,7 @@ public class QuackRunnerActivity extends AppCompatActivity {
                 if (quack.seekBar.getProgress() >= quack.seekBar.getMax()) {
                     isStop = true;
                     quack.isWinner = true;
+                    winnerDuck = quack;
                     break;
                 }
             }
@@ -201,7 +221,7 @@ public class QuackRunnerActivity extends AppCompatActivity {
                 handler.postDelayed(this, 500); // Lập lịch tăng sau một khoảng thời gian
             }
             else {
-                showWinnerDialog();
+                showWinnerDialog(winnerDuck);
             }
         }
     };
@@ -271,6 +291,8 @@ public class QuackRunnerActivity extends AppCompatActivity {
 
                         if (totalBet <= totalMoney) {
                             totalMoney -= totalBet;
+                            TextView coin = binding.tvCoin;
+                            coin.setText(totalMoney + "");
                             dialog.dismiss();
                             handler.post(increaseRunnable);
                         }
