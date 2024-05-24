@@ -8,8 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".Activity.QuackRunnerActivity">
 
-
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
@@ -76,6 +74,7 @@
             android:layout_marginBottom="220dp"
             android:progressDrawable="@drawable/wave"
             android:thumb="@drawable/ic_duck_1"
+            android:clickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -86,6 +85,7 @@
             android:layout_marginBottom="155dp"
             android:progressDrawable="@drawable/wave"
             android:thumb="@drawable/ic_duck_2"
+            android:clickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -97,6 +97,7 @@
             android:layout_marginBottom="90dp"
             android:progressDrawable="@drawable/wave"
             android:thumb="@drawable/ic_duck_3"
+            android:clickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -107,6 +108,7 @@
             android:layout_marginBottom="10dp"
             android:progressDrawable="@drawable/wave"
             android:thumb="@drawable/ic_duck_4"
+            android:clickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -131,9 +133,6 @@
         </ImageView>
 
     </LinearLayout>
-
-
-
 
     <LinearLayout
         android:gravity="center|left"

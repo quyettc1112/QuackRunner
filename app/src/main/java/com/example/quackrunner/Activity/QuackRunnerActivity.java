@@ -70,6 +70,12 @@ public class QuackRunnerActivity extends AppCompatActivity {
 //        SeekBar seekBarLine3 = binding.customSeekbarLine3;
 //        SeekBar seekBarLine4 = binding.customSeekbarLine4;
 
+        binding.customSeekbarLine1.setEnabled(false);
+        binding.customSeekbarLine2.setEnabled(false);
+        binding.customSeekbarLine3.setEnabled(false);
+        binding.customSeekbarLine4.setEnabled(false);
+
+
         setupSeekBarAnimation(binding.customSeekbarLine1, 200);
         setupSeekBarAnimation(binding.customSeekbarLine2, 300);
         setupSeekBarAnimation(binding.customSeekbarLine3, 200);
@@ -196,6 +202,8 @@ public class QuackRunnerActivity extends AppCompatActivity {
             dialog.setCancelable(true);
             dialog.setCanceledOnTouchOutside(true);
 
+            resetDuckProgress();
+
 
         dialog.show();
     }
@@ -215,12 +223,16 @@ public class QuackRunnerActivity extends AppCompatActivity {
                     winnerDuck = quack;
                     break;
                 }
+
+
             }
 
             if (!isStop) {
                 handler.postDelayed(this, 500); // Lập lịch tăng sau một khoảng thời gian
+                binding.btnReset.setEnabled(false);
             }
             else {
+                binding.btnReset.setEnabled(true);
                 showWinnerDialog(winnerDuck);
             }
         }
