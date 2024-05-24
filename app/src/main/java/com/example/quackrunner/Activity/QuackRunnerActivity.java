@@ -98,6 +98,13 @@ public class QuackRunnerActivity extends AppCompatActivity {
                 showCustomDialog();
             }
         });
+
+        binding.Logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     // Setup ảnh động seek bar
@@ -342,6 +349,8 @@ public class QuackRunnerActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 
     @Override

@@ -53,6 +53,7 @@ public class TutorialActivity extends AppCompatActivity {
                 } else  {
                     Intent i = new Intent(TutorialActivity.this, QuackRunnerActivity.class);
                     startActivity(i);
+                    finish();
 
                 }
             }
